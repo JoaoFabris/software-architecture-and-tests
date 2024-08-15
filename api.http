@@ -1,0 +1,125 @@
+### DRIVERS
+
+### Listar viagens em aberto
+GET http://localhost:3001/drivers/open/travels
+
+### Alterar status da viagem
+PATCH http://localhost:3001/drivers/1/travels/1
+
+### Listar motoristas
+GET http://localhost:3001/drivers
+
+### Listar motoristas por id
+GET http://localhost:3001/drivers/1
+
+### Cadastrar motorista
+POST http://localhost:3001/drivers
+Content-Type: application/json
+
+{
+  "name": "Gus Fring"
+}
+
+### PASSENGERS
+
+### Listar pessoas passageiras
+GET http://localhost:3001/passengers
+
+### Buscar pessoa passageira por id
+GET http://localhost:3001/passengers/1
+
+### Cadastrar pessoa passageira
+POST http://localhost:3001/passengers
+Content-Type: application/json
+
+{
+  "name": "Jose Kleber",
+  "email": "jk@mail.com",
+  "phone": "12992187654"
+}
+
+
+### Editar pessoa passageira
+PATCH  http://localhost:3001/passengers/1
+Content-Type: application/json
+
+{
+  "name": "Jose Cleber",
+  "email": "clebao.j@mail.com",
+  "phone": "12992187654"
+}
+
+### Cria viagem sem pontos de parada!
+POST http://localhost:3001/passengers/1/request/travel
+Content-Type: application/json
+
+{
+  "startingAddress": "Rua negro e solimões",
+  "endingAddress": "Rua trio parada dura",
+  "waypoints": []
+}
+
+### Cria viagem com pontos de parada!
+POST http://localhost:3001/passengers/1/request/travel
+Content-Type: application/json
+
+{
+  "startingAddress": "Rua negro e solimões",
+  "endingAddress": "Rua trio parada dura",
+  "waypoints": [
+    {
+      "address": "Rua Quatro de Março",
+      "stopOrder": 1
+    },
+    {
+      "address": "Rua Sete de Setembro",
+      "stopOrder": 2
+    }
+  ]
+}
+
+### Cria viagem com pessoa passageira que não existe
+POST http://localhost:3001/passengers/999/request/travel
+Content-Type: application/json
+
+{
+  "startingAddress": "Rua negro e solimões",
+  "endingAddress": "Rua trio parada dura",
+  "waypoints": []
+}
+
+### CARS
+
+### Listar carros
+GET http://localhost:3001/cars
+
+### Buscar carro por id
+GET http://localhost:3001/cars/1
+
+### Cadastrar carro
+POST http://localhost:3001/cars
+Content-Type: application/json
+
+{
+  "model": "Fusca",
+  "color": "",
+  "licensePlate": "ABC1D2E",
+  "year": 2019,
+  "driverId": 1
+}
+
+
+### Editar carro
+PATCH  http://localhost:3001/cars/1
+Content-Type: application/json
+
+{
+  "model": "Novo Fusca",
+  "color": "Branco",
+  "licensePlate": "ABC1D2E",
+  "year": 2019,
+  "driverId": "1"
+}
+
+### Remover carro
+DELETE  http://localhost:3001/cars/1
