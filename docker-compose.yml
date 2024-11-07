@@ -1,0 +1,39 @@
+version: "3" # Especifica a versão do Docker Compose a ser usada. A versão 3 é amplamente suportada e permite um bom equilíbrio entre recursos e compatibilidade.
+
+services:
+  # Serviço que irá rodar o node
+  node:
+    image: node:16.14 # indica a imagem que será usada para o contêiner, baseada no Node.js versão 16.14.
+    container_name: trybecar
+    # Mesmo que `docker run -t`
+    tty: true # Define tty: true, que ativa o terminal do contêiner para que ele continue em execução. Equivalente à flag -t no Docker.
+    # Mesmo que `docker run -i`
+    stdin_open: true # útil para interatividade.
+    command: bash # Sobrescreve o comando padrão da imagem para executar o Bash. Isso é útil para acessar o contêiner e realizar configurações manuais, se necessário.
+    restart: always # Define a política de reinicialização como always, fazendo com que o contêiner seja reiniciado automaticamente caso falhe ou seja reiniciado o host.
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
+    depends_on:
+      - database
+    ports:
+      # Expõe a porta padrão da aplicação: altere aqui caso use outra porta
+      - 3001:3001
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_PORT: 3306
+      MYSQL_HOST: database # Nome do service que será utilizado para o banco de dados
+      PORT: 3001
+
+  # Serviço que irá rodar o banco de dados
+  database:
+    image: mysql:8.0.29
+    container_name: trybecar_db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: trybecardb
+    ports:
+      - 33060:3306
+    volumes:
+      - ./:/docker-entrypoint-initdb.d
