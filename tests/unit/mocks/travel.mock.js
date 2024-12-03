@@ -25,6 +25,9 @@ const travelFromModel = {
   waypoints: [],
 };
 
+travelupdate = {
+  
+}
 
 
 const travelWithWaypointsFromDB = [

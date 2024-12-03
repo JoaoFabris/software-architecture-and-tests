@@ -8,7 +8,7 @@ const findAll = async () => {
   return camelize(passengers); 
   // vai transformar snakecase vai passar em camelCase;
 };
-
+ // encontra o passageiro pelo id
 const findById = async (passengerId) => {
   const [[passenger]] = await connection.execute(
     'SELECT * FROM passengers WHERE id = ?',

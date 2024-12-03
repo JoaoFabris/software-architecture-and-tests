@@ -25,6 +25,14 @@ describe('Realizando testes - TRAVEL MODEL:', function () {
     expect(insertId).to.equal(travelIdFromModel);
   });
 
+  it('Testando update travel', async function () {
+    sinon.stub(connection, 'execute').resolves();
+
+    const result = await travelModel.update();
+
+    expect(result).to.be.equal();
+  });
+
   it('Inserindo travel com waypoints com sucesso', async function () {
     sinon.stub(connection, 'execute')
       .onFirstCall()
