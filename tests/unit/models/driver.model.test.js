@@ -27,7 +27,7 @@ describe('Testando a model da drivers', function () {
             { id: 1, name: 'Liana Cisneiros' },
         );
     });
-    it.only('testar insert driver', async function () {
+    it('testar insert driver', async function () {
         sinon.stub(connection, 'execute').resolves([driverIdFromDB]);
 
         const inputData = { name: 'João Fabris' };

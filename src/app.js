@@ -1,10 +1,15 @@
 const express = require('express');
-const { travelModel, passengerModel, driverModel } = require('./models');
-const { carService } = require('./services/car.service');
+const { travelModel, passengerModel, driverModel, carModel } = require('./models');
+const carService = require('./services/car.service');
+const travelService = require('./services/travelService.service');
+const { passengerRoute, driverRoute, travelRoute } = require('./routes');
 
 const app = express();
 
 app.use(express.json());
+app.use('/passengers', passengerRoute);
+app.use('/travels', travelRoute);
+app.use('/drivers', driverRoute);
 
 const passengerExists = async (passengerId) => {
   const passenger = await passengerModel.findById(passengerId);
@@ -22,10 +27,10 @@ app.get('/driver/:driverId', async (req, res) => {
   return res.status(200).json(driver);
 });
 
-app.get('/driver', async (_req, res) => {
+/* app.get('/driver', async (_req, res) => {
   const drivers = await driverModel.findAll();
   return res.status(200).json(drivers);
-});
+}); */
 
 app.get('/passengers/:passengerId', async (req, res) => {
   const { passengerId } = req.params;
@@ -67,9 +72,8 @@ app.post('/passengers/:passengerId/request/travel', async (req, res) => {
 });
 
 app.get('/drivers/open/travels', async (_req, res) => {
-  const WAITING_DRIVER = 1; 
-  const openTravelsFromDB = await travelModel.findByStatus(WAITING_DRIVER);
-  res.status(200).json(openTravelsFromDB);
+  const serviceResponse = await travelService.getOpenTravels();
+  return res.status(200).json(serviceResponse.data);
 });
 
 /* app.put('/drivers/:driverId/travels/:travelId/assign', async (req, res) => {
@@ -78,17 +82,16 @@ app.get('/drivers/open/travels', async (_req, res) => {
     'UPDATE travels SET driver_id = ? WHERE id = ?', [travelId, driverId],
   )
 }); */
-
 app.patch('/drivers/:driverId/travels/:travelId', async (req, res) => {
   const { driverId, travelId } = req.params;
-  const INCREMENT_STATUS = 1;
-  const { travelStatusId } = await travelModel.findById(travelId);
-  const nextTravelStatusId = travelStatusId + INCREMENT_STATUS;
+  
+  const serviceResponse = await travelService.updateTravelStatus(driverId, travelId);
+  
+  if (serviceResponse.status !== 'SUCCESSFUL') {
+    return res.status(422).json(serviceResponse.data);
+  }
 
-  await travelModel.update(travelId, { driverId, travelStatusId: nextTravelStatusId });
-  const updatedTravel = await travelModel.findById(travelId);
-
-  res.status(200).json(updatedTravel);
+  return res.status(200).json(serviceResponse.data);
 });
 
 app.post('/cars', async (req, res) => {
@@ -108,11 +111,8 @@ app.post('/cars', async (req, res) => {
 });
 
 app.get('/cars', async (_req, res) => {
-  const serviceResponse = await carService.findAll();
-  if (serviceResponse.status !== 'SUCCESSFUL') {
-    return res.status(422).json(serviceResponse.data);
-  }
-  return res.status(200).json(serviceResponse.data);
+  const passengers = await carModel.findAll();
+  return res.status(200).json(passengers);
 });
 
 module.exports = app;

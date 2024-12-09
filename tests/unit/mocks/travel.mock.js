@@ -123,6 +123,24 @@ const returnFromDB = [
   undefined,
 ];
 
+const travelFromServiceCreated = {
+  status: 'CREATED',
+  data: travelFromModel,
+};
+const travelFromServiceInvalidValue = {
+  status: 'INVALID_VALUE',
+  data: { message: 'message' },
+};
+const travelFromServiceNotFound = {
+  status: 'NOT_FOUND',
+  data: { message: 'message' },
+};
+const travelFromServiceConflict = {
+  status: 'CONFLICT',
+  data: { message: 'message' },
+};
+
+
 module.exports = {
   travelIdFromDB,
   travelIdFromModel,
@@ -133,4 +151,8 @@ module.exports = {
   travelByStatusFromDB,
   travelByStatusFromModel,
   returnFromDB,
+  travelFromServiceCreated,
+  travelFromServiceInvalidValue,
+  travelFromServiceNotFound,
+  travelFromServiceConflict,
 };
